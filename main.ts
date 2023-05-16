@@ -16,25 +16,30 @@ input.onButtonPressed(Button.AB, function () {
         datalogger.deleteLog()
         logging = false
         datalogger.setColumnTitles(
-        "Lumiere",
-        "Température"
+        "Lum",
+        "Temp"
         )
     }
 })
+let T = 0
+let L = 0
 let logging = false
+serial.setBaudRate(BaudRate.BaudRate115200)
 logging = false
+datalogger.includeTimestamp(FlashLogTimeStampFormat.Days)
 datalogger.setColumnTitles(
-"Lumiere",
-"Température"
+"Lum",
+"Temp"
 )
 loops.everyInterval(60000, function () {
     if (logging) {
+        L = input.lightLevel()
+        T = input.temperature()
+        serial.writeValue("L", L)
+        serial.writeValue("T", T)
         datalogger.log(
-        datalogger.createCV("Lumiere", input.lightLevel()),
-        datalogger.createCV("Température", input.temperature())
+        datalogger.createCV("Lum", input.lightLevel()),
+        datalogger.createCV("Temp", input.temperature())
         )
     }
-})
-basic.forever(function () {
-	
 })
